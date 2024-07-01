@@ -13,16 +13,10 @@ import NFTCard from "../components/Card";
 import { DragStartEvent } from "@dnd-kit/core";
 
 const calculateLayout = (containerWidth: number) => {
-  const minCardWidth = 150;
-  const maxCols = Math.floor(containerWidth / minCardWidth);
+  const maxCols = Math.floor(containerWidth / 200); // Assuming a minimum card width of 200px
   const size = Math.floor(containerWidth / maxCols);
   const offsetX = (containerWidth - size * maxCols) / 2;
   return { cols: maxCols, size, offsetX };
-};
-
-const detectSensor = () => {
-  const isWebEntry = JSON.parse(sessionStorage.getItem("isWebEntry") as string);
-  return isWebEntry ? PointerSensor : TouchSensor;
 };
 
 const NFTGrid = ({
@@ -40,7 +34,10 @@ const NFTGrid = ({
   const [dragId, setDragId] = useState<string | null>(null);
   const [layout, setLayout] = useState({ cols: 0, offsetX: 0 });
 
-  const sensors = useSensors(useSensor(detectSensor()));
+  const sensors = useSensors(
+    useSensor(PointerSensor, { activationConstraint: { distance: 5 } }),
+    useSensor(TouchSensor, { activationConstraint: { distance: 5 } })
+  );
 
   const { loading, error, data } = useQuery(GET_NFTS, {
     variables: { owner: wallet, limit: nftCount },

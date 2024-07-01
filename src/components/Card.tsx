@@ -68,6 +68,7 @@ const NFTCard = ({
       : `translate3d(${nft.x}px, ${nft.y}px, 0)`,
     zIndex: isDragging ? 1000 : 1,
     cursor: "move",
+    touchAction: "none", // https://docs.dndkit.com/api-documentation/sensors/pointer#touch-action
   };
 
   return (
