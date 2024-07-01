@@ -14,6 +14,7 @@ const App = () => {
   return (
     <ApolloProvider client={client}>
       <div className="flex h-screen flex-col">
+        <Grid wallet={wallet} nftCount={nftCount} bgImage={bgImage} />
         <BottomSheet
           wallet={wallet}
           setWallet={setWallet}
@@ -22,7 +23,6 @@ const App = () => {
           bgImage={bgImage}
           setBgImage={setBgImage}
         />
-        <Grid wallet={wallet} nftCount={nftCount} bgImage={bgImage} />
       </div>
     </ApolloProvider>
   );
