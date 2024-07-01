@@ -4,10 +4,7 @@ import { ApolloProvider } from "@apollo/client";
 import { client } from "./graphql";
 import BottomSheet from "../components/BottomSheet";
 import Grid from "../components/Grid";
-
-export const DEFAULT_WALLET = "badkids";
-export const STARGAZE_CHAIN_ID = "stargaze-1";
-export const STARGAZE_RPC_URL = "https://rpc.cosmos.directory/stargaze";
+import { DEFAULT_WALLET } from "@/constants";
 
 const App = () => {
   const [wallet, setWallet] = useState(DEFAULT_WALLET);

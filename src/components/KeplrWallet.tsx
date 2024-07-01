@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { StargateClient } from "@cosmjs/stargate";
-import { STARGAZE_CHAIN_ID, STARGAZE_RPC_URL } from "@/app/page";
+import { STARGAZE_CHAIN_ID, STARGAZE_RPC_URL } from "@/constants";
 import { Label } from "@/components/ui/label";
 
 declare global {

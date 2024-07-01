@@ -10,6 +10,7 @@ import {
 import { Loader2 } from "lucide-react";
 import { GET_NFTS } from "../app/graphql";
 import NFTCard from "../components/Card";
+import { DragStartEvent } from "@dnd-kit/core";
 
 const calculateLayout = (containerWidth: number) => {
   const maxCols = Math.floor(containerWidth / 200); // Assuming a minimum card width of 200px
@@ -28,9 +29,9 @@ const NFTGrid = ({
   bgImage: string;
 }) => {
   const containerRef = useRef<HTMLDivElement | null>(null);
-  const [nfts, setNfts] = useState<never[]>([]);
+  const [nfts, setNfts] = useState<any[]>([]);
   const [cardSize, setCardSize] = useState(200);
-  const [dragId, setDragId] = useState(null);
+  const [dragId, setDragId] = useState<string | null>(null);
   const [layout, setLayout] = useState({ cols: 0, offsetX: 0 });
 
   const sensors = useSensors(
@@ -48,7 +49,6 @@ const NFTGrid = ({
         const containerWidth = containerRef.current.offsetWidth;
         const { cols, size, offsetX } = calculateLayout(containerWidth);
         setLayout({ cols, offsetX });
-        // @ts-ignore
         setNfts((current: any[]) =>
           current.map((nft: any, i: number) => ({
             ...nft,
@@ -83,26 +83,32 @@ const NFTGrid = ({
     }
   }, [data, nftCount]);
 
-  const handleDragStart = (event: {
-    active: { id: React.SetStateAction<null> };
-  }) => setDragId(event.active.id);
+  const handleDragStart = (event: DragStartEvent) =>
+    setDragId(event.active.id.toString());
 
   const handleDragEnd = (event: { active: any; delta: any }) => {
     const { active, delta } = event;
     const { offsetX } = layout;
     setDragId(null);
 
-    setNfts((current) => {
-      const activeNft = current.find((nft) => nft.id === active.id);
+    setNfts((current: any) => {
+      const activeNft = current.find(
+        (nft: { id: any }) => nft.id === active.id
+      );
       if (!activeNft) return current;
 
-      const snap = (value, size, offset, margin) =>
+      const snap = (
+        value: number,
+        size: number,
+        offset: number,
+        margin: number
+      ) =>
         Math.round((value - offset - margin) / size) * size + offset + margin;
 
       const newX = snap(activeNft.x + delta.x, cardSize, offsetX, 10);
       const newY = snap(activeNft.y + delta.y, cardSize, 0, 10);
 
-      return current.map((nft) => {
+      return current.map((nft: { id: any; x: any; y: any }) => {
         if (nft.id === active.id) {
           return { ...nft, x: newX, y: newY };
         }
@@ -114,13 +120,13 @@ const NFTGrid = ({
     });
   };
 
-  const removeNFT = useCallback((id) => {
+  const removeNFT = useCallback((id: any) => {
     if (containerRef.current) {
       const containerWidth = containerRef.current.offsetWidth;
-      setNfts((current) => {
-        const newNfts = current.filter((nft) => nft.id !== id);
+      setNfts((current: any) => {
+        const newNfts = current.filter((nft: { id: any }) => nft.id !== id);
         const { cols, size, offsetX } = calculateLayout(containerWidth);
-        return newNfts.map((nft, i) => ({
+        return newNfts.map((nft: any, i: number) => ({
           ...nft,
           x: (i % cols) * size + offsetX + 10,
           y: Math.floor(i / cols) * size + 10,

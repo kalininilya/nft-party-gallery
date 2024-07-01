@@ -14,7 +14,7 @@ import Warning from "./Warning";
 import KeplrWallet from "./KeplrWallet";
 import DisplaySettings from "./DisplaySettings";
 import TransactionControls from "./TransactionControls";
-import { STARGAZE_CHAIN_ID, STARGAZE_RPC_URL } from "@/app/page";
+import { STARGAZE_CHAIN_ID, STARGAZE_RPC_URL } from "@/constants";
 
 interface BottomSheetProps {
   wallet: string;

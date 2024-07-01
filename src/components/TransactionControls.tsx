@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
-import { STARGAZE_CHAIN_ID } from "@/app/page";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 

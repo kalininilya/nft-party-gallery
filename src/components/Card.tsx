@@ -33,7 +33,7 @@ const NFTCard = ({
   const { setNodeRef: setDropRef } = useDroppable({ id: nft.id });
 
   const setRef = useCallback(
-    (node) => {
+    (node: HTMLElement | null) => {
       setDragRef(node);
       setDropRef(node);
     },
