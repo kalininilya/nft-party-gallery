@@ -1,4 +1,3 @@
-"use client";
 import React, { useState, useEffect, useRef, useCallback } from "react";
 import { useQuery } from "@apollo/client";
 import {
@@ -6,6 +5,7 @@ import {
   useSensor,
   useSensors,
   PointerSensor,
+  TouchSensor,
 } from "@dnd-kit/core";
 import { Loader2 } from "lucide-react";
 import { GET_NFTS } from "../app/graphql";
@@ -13,10 +13,16 @@ import NFTCard from "../components/Card";
 import { DragStartEvent } from "@dnd-kit/core";
 
 const calculateLayout = (containerWidth: number) => {
-  const maxCols = Math.floor(containerWidth / 200); // Assuming a minimum card width of 200px
+  const minCardWidth = 150;
+  const maxCols = Math.floor(containerWidth / minCardWidth);
   const size = Math.floor(containerWidth / maxCols);
   const offsetX = (containerWidth - size * maxCols) / 2;
   return { cols: maxCols, size, offsetX };
+};
+
+const detectSensor = () => {
+  const isWebEntry = JSON.parse(sessionStorage.getItem("isWebEntry") as string);
+  return isWebEntry ? PointerSensor : TouchSensor;
 };
 
 const NFTGrid = ({
@@ -34,9 +40,7 @@ const NFTGrid = ({
   const [dragId, setDragId] = useState<string | null>(null);
   const [layout, setLayout] = useState({ cols: 0, offsetX: 0 });
 
-  const sensors = useSensors(
-    useSensor(PointerSensor, { activationConstraint: { distance: 5 } })
-  );
+  const sensors = useSensors(useSensor(detectSensor()));
 
   const { loading, error, data } = useQuery(GET_NFTS, {
     variables: { owner: wallet, limit: nftCount },
@@ -138,7 +142,7 @@ const NFTGrid = ({
   return (
     <div
       ref={containerRef}
-      className="flex-grow relative overflow-auto"
+      className="flex-grow relative overflow-auto touch-action-none" // Add touch-action-none to prevent scrolling
       style={{
         backgroundImage: `url(${bgImage})`,
         backgroundSize: "cover",
